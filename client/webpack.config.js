@@ -12,8 +12,15 @@ module.exports = () => {
     entry: {
       main: './src/js/index.js',
       install: './src/js/install.js',
-      editor: './src/js/editor.js',
-      header:'./src/js/header.js'
+      // editor: './src/js/editor.js',
+      // header:'./src/js/header.js'
+    },
+    devServer: {
+      allowedHosts: 'all',
+      compress: true,
+      hot: true,
+      port: 3001,
+      // Other valid properties...
     },
     output: {
       filename: '[name].bundle.js',
@@ -23,31 +30,36 @@ module.exports = () => {
       // Webpack plugin that generates our html file and injects our bundles. 
       new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'Contact Cards'
-      }),
-      // Injects our custom service worker
-      new InjectManifest({
-        swSrc: './src-sw.js',
-        swDest: 'src-sw.js',
+        title: 'Jate'
       }),
       // Creates a manifest.json file.
       new WebpackPwaManifest({
         fingerprints: false,
         inject: true,
-        name: 'Editor Info',
-        short_name: 'Editor',
-        description: 'Never forget your editor!',
+        name: 'Jate Info',
+        short_name: 'Jate',
+        description: 'Never forget your Jate!',
         background_color: '#225ca3',
         theme_color: '#225ca3',
         start_url: './',
         publicPath: './',
+        display:'standalone',
         icons: [
           {
             src: path.resolve('src/images/logo.png'),
-            sizes: [96, 128, 192, 256, 384, 512],
+            sizes: [96, 128, 144, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
+          {
+            src: path.resolve('favicon.ico'),
+            sizes: [96, 128, 144, 192, 256, 384, 512],
+          },
         ],
+      }),
+      // Injects our custom service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
       }),
     ],
 
@@ -57,6 +69,10 @@ module.exports = () => {
         {
           test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
+          type:'asset/resource',
         },
         {
           test: /\.m?js$/,
